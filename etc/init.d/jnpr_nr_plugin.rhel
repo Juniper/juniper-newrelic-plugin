@@ -1,0 +1,91 @@
+#!/bin/bash
+. /etc/init.d/functions
+USER_DIR=/usr/local/bin
+PIDFILE=/var/run/jnpr_nr_plugin/jnpr_nr_plugin.pid
+APP_NAME=jnpr_nr_plugin
+CONFIG_DIR=/etc/$APP_NAME
+CONFIG_FILE=$CONFIG_DIR/$APP_NAME.cfg
+
+if [ -f /etc/sysconfig/jnpr_nr_plugin ]; then
+        . /etc/sysconfig/jnpr_nr_plugin
+fi
+
+if [ ! -f "$CONFIG_FILE" ]; then
+  echo "cannot find config file $CONFIG_FILE"
+  exit 1
+fi
+ 
+OPTS=''
+OPTS="-c ${CONFIG_FILE} ${OPTS}"
+
+status(){
+  echo "checking jnpr_nr_plugin status"
+  if [ -f $PIDFILE ]; then
+	  pid=`cat $PIDFILE 2>/dev/null`
+	  echo "checking for pid $pid" 
+	  if [ -n "$pid" ] && [ -d /proc/$pid ] && [ -n "$(grep $APP_NAME /proc/$pid/cmdline)" ]; then
+	  	echo "jnpr_nr_plugin is running with [pid: $pid]"
+	  	return 0
+	  fi
+  fi
+  echo "jnpr_nr_plugin is not running"
+  return 1
+}
+
+start() {
+   echo "starting jnpr_nr_plugin"
+   status
+   if [ $? -eq 0 ]; then 
+    echo "starting jnpr_nr_plugin failed"
+   	return 1
+   fi
+   command="$USER_DIR/$APP_NAME $OPTS"
+   echo "starting jnpr_nr_plugin with command $command"
+   $command
+   if [ $? -eq 0 ]; then 
+   	 echo "jnpr_nr_plugin started"
+   	 return 0
+   fi
+   echo "starting jnpr_nr_plugin failed"
+   return 1
+
+}
+
+stop() {
+   echo "stopping jnpr_nr_plugin"
+   status
+   if [ $? -eq 1 ]; then 
+    echo "stopping jnpr_nr_plugin failed"
+   	return 1
+   fi 
+   pid=`cat $PIDFILE 2>/dev/null`
+   /bin/kill "$pid" >/dev/null 2>&1
+   if [ $? -eq 0 ]; then
+   	 echo "jnpr_nr_plugin stopped"	 
+   	 rm -rf $PIDFILE
+   	 return 0
+   fi
+   echo "stopping jnpr_nr_plugin failed"
+   return 1     
+}
+
+case "$1" in
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+    status)
+        status 
+        ;;
+    restart)
+        stop
+        start
+        ;;
+    *)
+        echo "Usage:  {start|stop|status|restart}"
+        exit 1
+        ;;
+esac
+exit $?

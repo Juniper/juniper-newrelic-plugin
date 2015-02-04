@@ -1,0 +1,58 @@
+---
+PortStats:
+  rpc: get-interface-information
+  args:
+    interface_name: '[fgxe][clte]*'
+    extensive: True
+  args_key: interface_name
+  item: physical-interface
+  view: PortStatsView
+
+PortStatsView:
+  fields:
+    state/admin: admin-status
+    state/operational: oper-status
+    unicast/rx: ethernet-mac-statistics/input-unicasts
+    multicast/rx: ethernet-mac-statistics/input-multicasts
+    broadcast/rx: ethernet-mac-statistics/input-broadcasts
+    unicast/tx:  ethernet-mac-statistics/output-unicasts
+    multicast/tx: ethernet-mac-statistics/output-multicasts
+    broadcast/tx: ethernet-mac-statistics/output-broadcasts
+    
+  groups:
+    txerrs: output-error-list
+    rxerrs: input-error-list
+    tfstats: traffic-statistics
+   
+  fields_tfstats:
+    bytes/rx: input-bytes
+    packets/rx: input-packets
+    bytes/tx: output-bytes
+    packets/tx: output-packets
+  
+      
+  fields_rxerrs:
+    errors/rx: input-errors
+    drops/rx: input-drops
+  
+  fields_txerrs:
+    errors/tx: output-errors
+    drops/tx: output-drops
+    
+  meta_data:
+    state/admin: { type : count, unit : ports }
+    state/operation: { type : count, unit : ports }
+    bytes/rx: { type : rate, unit : bytes/sec, summarize : Yes }
+    packets/rx: { type : rate, unit : pkts/sec, summarize : Yes }
+    unicast/rx: { type : rate, unit : pkts/sec, summarize : Yes }
+    multicast/rx: { type: rate, unit : pkts/sec, summarize : Yes }
+    broadcast/rx: { type : rate, unit : pkts/sec, summarize : Yes }
+    errors/rx: { type: rate, unit : errors/sec, summarize : Yes }
+    drops/rx: { type: rate, unit : drops/sec, summarize : Yes}
+    bytes/tx: { type : rate, unit : bytes/sec, summarize : Yes }
+    packets/tx: { type : rate, unit : pkts/sec, summarize : Yes }
+    unicast/tx: { type : rate, unit : pkts/sec, summarize : Yes }
+    multicast/tx: { type: rate, unit : pkts/sec, summarize : Yes }
+    broadcast/tx: { type: rate, unit : pkts/sec, summarize : Yes }
+    errors/tx: { type : rate, unit : errors/sec, summarize : Yes }
+    drops/tx: { type : rate, unit : drops/sec, summarize : Yes }

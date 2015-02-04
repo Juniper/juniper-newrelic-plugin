@@ -1,0 +1,71 @@
+
+Installation Steps:
+[Login as Root user]
+
+System Requirements
+	1.	python 2.7.x
+	2.	python PIP, setup tools & Virtual tools [Installing in virtual environment]for python 2.7.x
+		For installation of python 2.7.x, PIP, setup tools, Virtual env on Centos refer
+				http://bicofino.io/blog/2014/01/16/installing-python-2-dot-7-6-on-centos-6-dot-5/
+				http://toomuchdata.com/2014/02/16/how-to-install-python-on-centos/
+				
+	3.	Native libraries required by Py-Junos-Eznc
+		For Py-Junos-Eznc native libraries dependency refer
+			https://techwiki.juniper.net/Automation_Scripting/010_Getting_Started_and_Reference/Junos_PyEZ/Installation
+
+		
+Juniper NR Agent Installation/ Un-installation:
+
+Install
+	1.	pip2.7 install $path/jnpr_nr_plugin-1.0.0.tar.gz
+	2.	create folder /etc/jnpr_nr_plugin & move example configuration file from /jnpr_nr_plugin/etc/jnpr_nr_plugin.cfg to /etc/jnpr_nr_plugin/jnpr_nr_plugin.cfg
+		[or in virtual environment $VIRTUAL_ENV/jnpr_nr_plugin/etc/jnpr_nr_plugin.cfg]
+	3.	create folders /var/log/jnpr_nr_plugin & /var/run/jnpr_nr_plugin and make sure user specified in configuration file has enough permission for the folders
+Uninstall
+	1. 	pip2.7 uninstall jnpr_nr_plugin and remove the created folders /etc/jnpr_nr_plugin, /var/log/jnpr_nr_plugin and /var/run/jnpr_nr_plugin
+	
+
+Configuration:
+	Example configuration file is found at /jnpr_nr_plugin/etc/jnpr_nr_plugin.cfg 
+		[or in virtual environment $VIRTUAL_ENV/jnpr_nr_plugin/etc/jnpr_nr_plugin.cfg ]
+	Configure Application Setting and Device details by referring to Example Configuration File
+	
+Agent Start:
+	jnpr_nr_plugin -c $path_to_config_file
+
+
+Ex: 
+Assuming current user is root & directory is /root and jnpr_nr_plugin-1.0.0.tar.gz is copied to /root
+	install python:
+		root@host1#wget http://python.org/ftp/python/2.7.8/Python-2.7.8.tar.xz
+		root@host1#tar xf Python-2.7.8.tar.xz
+		root@host1#cd Python-2.7.8
+		root@host1#./configure --prefix=/usr/local --enable-unicode=ucs4 --enable-shared LDFLAGS="-Wl,-rpath /usr/local/lib"
+		root@host1#make && make altinstall
+		root@host1#wget https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py
+		
+	install setup tools:
+		root@host1#python2.7 ez_setup.py
+		root@host1#easy_install-2.7 pip
+		
+	install native libs:
+		root@host1#yum install libxml2 libxslt
+		
+	install agent:
+		root@host1#pip2.7 install /root/jnpr_nr_plugin-1.0.0.tar.gz	
+		root@host1#mkdir /etc/jnpr_nr_plugin
+		root@host1#mv /jnpr_nr_plugin/etc/jnpr_nr_plugin.cfg /etc/jnpr_nr_plugin/jnpr_nr_plugin.cfg
+	
+	configure & start agent:
+		Edit /etc/jnpr_nr_plugin/jnpr_nr_plugin.cfg for configuration changes
+		root@host1#mkdir /var/log/jnpr_nr_plugin /var/run/jnpr_nr_plugin
+		root@host1#jnpr_nr_plugin -c /etc/jnpr_nr_plugin/jnpr_nr_plugin.cfg
+		
+	uninstall agent:
+		root@host1#pip2.7 uninstall jnpr_nr_plugin
+		root@host1#rm -rf /etc/jnpr_nr_plugin  /var/log/jnpr_nr_plugin /var/run/jnpr_nr_plugin
+	
+	
+	
+
+	

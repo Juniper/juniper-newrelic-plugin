@@ -1,0 +1,32 @@
+*.py[cod]
+
+# C extensions
+*.so
+
+# Packages
+*.egg
+*.egg-info
+dist
+build
+README
+eggs
+parts
+var
+sdist
+develop-eggs
+.installed.cfg
+lib64
+env
+
+# Documentation
+docs/_build
+
+# Logs
+pip-log.txt
+*.log
+
+# Mr Developer
+.project
+.pydevproject
+
+MANIFEST

@@ -1,0 +1,30 @@
+---
+REStats:
+  rpc: get-route-engine-information
+  key: mastership-state
+  item: route-engine
+  view: REStatsView
+
+REStatsView:
+  fields:
+    status: status
+    memory: memory-buffer-utilization
+    cpu/user : cpu-user
+    cpu/idle: cpu-idle 
+    cpu/background: cpu-background
+    cpu/interrupt: cpu-interrupt
+    temperature : temperature/@celsius
+    cpu/load_average: load-average-five
+    cpu/system: cpu-system
+
+  meta_data:
+    status: { type : count, unit : status }
+    memory: { type : gauge, unit : percent }
+    cpu/user: { type : gauge, unit : percent }
+    cpu/idle: { type : gauge, unit : percent }
+    cpu/system: { type : gauge, unit : percent }
+    cpu/background: { type : gauge, unit : percent }
+    cpu/interrupt: { type : gauge, unit : percent }
+    cpu/temperature: { type : gauge, unit : degree }
+    cpu/load_average: { type : gauge, unit : load }
+    
