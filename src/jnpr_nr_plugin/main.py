@@ -71,11 +71,9 @@ class Controller(helper.Controller):
         LOGGER.info('shutdown, start')
         retries = self.app_config.get('shutdown_retries', 3)
         sleep_time = self.app_config.get('shutdown_waittime', 0.5) * 60
-
         while self.is_active and retries > 0:
             time.sleep(sleep_time)
             retries -= 1
-
         LOGGER.info('shutdown, end')
 
     def on_sigusr1(self, signal, frame):

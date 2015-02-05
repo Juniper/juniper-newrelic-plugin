@@ -40,7 +40,7 @@ class StatsCollector(object):
             if LOGGER.isEnabledFor(logging.DEBUG):
                 self.dump()
             for listener in self.listeners:
-                    listener.notify(self.stats, self.poll_time())
+                listener.notify(self.stats, self.poll_time())
             self.clear()
         except Exception as e:
             LOGGER.exception('collect, failed %s', e)
@@ -95,32 +95,25 @@ class StatsCollector(object):
         self.stats.clear()
 
     def update_stats(self, dev_name, holder):
-
         if holder is None:
             return
         device = self.device_mgr.get_host_name(dev_name)
         with self.lock:
             if device not in self.stats_store:
                 self.stats_store[device] = dict()
-
-        with self.lock:
             if device not in self.stats:
                 self.stats[device] = dict()
-
         d_stats_store = self.stats_store[device]
         if holder.name not in d_stats_store:
             d_stats_store[
                 holder.name] = getattr(
                 stores, holder.type + 'Store')()
-
         if holder.name not in self.stats and holder.type == 'Count':
             d_stats_store[
                 holder.name] = getattr(
                 stores,
                 holder.type + 'Store')()
-
         stats = d_stats_store[holder.name]
-
         if stats.process(holder.val):
             self.stats[device][holder.name] = stats.as_dict()
 
@@ -130,16 +123,15 @@ class StatsCollector(object):
             return
         d_stats_store = self.stats_store[device]
         for path, unit in paths:
-            d_summary_elements = [(k,v) for k,v in d_stats_store.items() if k.startswith(path)]
-            is_average = False
+            d_summary_elements = [(k, v) for k, v in d_stats_store.items() if k.startswith(path)]
             if len(d_summary_elements) > 0:
-                k,v = d_summary_elements[0]
+                k, v = d_summary_elements[0]
                 if isinstance(v, stores.CountStore):
                     continue
                 is_average = isinstance(v, stores.GaugeStore)
                 count = 0
                 value = 0.0
-                for key,store in d_summary_elements:
+                for key, store in d_summary_elements:
                     if store.value is not None:
                         value += store.value
                         count += 1
@@ -149,8 +141,7 @@ class StatsCollector(object):
                     value = value / count
                 if path.endswith('/'):
                     path = path[0:len(path) - 1]
-                path = '%s/summary/%s' % (path[0:path.find('/')],path[path.find('/')+1:len(path)])
-                print 'device=%s path=%s val=%d' % (device, path + unit, value)
+                path = '%s/summary/%s' % (path[0:path.find('/')], path[path.find('/') + 1:len(path)])
                 holder = stores.StatsHolder(path + unit, value, '', 'gauge')
                 self.update_stats(device, holder)
 

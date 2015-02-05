@@ -36,12 +36,9 @@ class RPCFactoryLoader(FactoryLoader):
     def __build_metadata(self, view_name):
         if view_name not in self.catalog:
             return
-
         view_dict = self.__catalog_dict[view_name]
         v_dict = [
-            value for key,
-            value in view_dict.items() if 'meta_data' in key]
-
+            value for key, value in view_dict.items() if 'meta_data' in key]
         if len(v_dict) == 1 and isinstance(v_dict[0], dict):
             new_cls = type(view_name + '_MetaData', (MetaData,), {})
             new_cls.META_DATA = v_dict[0]

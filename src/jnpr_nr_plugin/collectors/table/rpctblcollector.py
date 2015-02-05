@@ -16,7 +16,6 @@ class RPCTableCommandCollector(collector.StatsCollector):
                            device_mgr)
 
     def processcmd(self, device, cmd_response):
-
         table = cmd_response
         LOGGER.debug('process_cmd, [%s, %s]', device, table.name)
         if table.result is None or table.result.keys(
@@ -42,7 +41,6 @@ class RPCTableCommandCollector(collector.StatsCollector):
                     c_metadata = table.metadata.get_values(c_name)
                     if c_metadata and len(c_metadata) == 1:
                         self.update_stats(device, self.get_holder(device, table.name, r_key, col, c_metadata[0]))
-
             self.summarize(device, self.get_summary_paths())
         except Exception as e:
             LOGGER.exception(
@@ -77,8 +75,8 @@ class RPCTableCommandCollector(collector.StatsCollector):
             return rpctblcmds.RPCTableCommandResult(name)
 
     def get_summary_paths(self):
-        return list()
+        raise NotImplementedError
 
     def get_holder(
             self, device, key, r_key, col, c_metadata):
-        return None
+        return NotImplementedError

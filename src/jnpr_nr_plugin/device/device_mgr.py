@@ -64,13 +64,11 @@ class DeviceManager(object):
         LOGGER.debug('get_connected_device, request by [%s]', requester_name)
         time1 = time.time()
         dev_name = device.get('ip_address')
-
         password_encoded = self.config.get('password_encoded', False)
         if password_encoded:
             pwd = utils.decrypt_passwd(device.get('password'))
         else:
             pwd = device.get('password')
-
         dev = Device(host=dev_name, user=device.get('user'),
                      password=pwd, port=device.get('port', 22), gather_facts=False, auto_probe=5)
         event = threading.Event()
@@ -95,7 +93,6 @@ class DeviceManager(object):
             name='DevThread-' +
                  dev_name)
         thread.start()
-
         time_out = self.config.get('connect_timeout', 1) * 60
         rpc_timeout = self.config.get('rpc_timeout', 1) * 60
         event.wait(time_out)
