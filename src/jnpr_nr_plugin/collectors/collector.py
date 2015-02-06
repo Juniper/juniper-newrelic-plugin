@@ -108,11 +108,6 @@ class StatsCollector(object):
             d_stats_store[
                 holder.name] = getattr(
                 stores, holder.type + 'Store')()
-        if holder.name not in self.stats and holder.type == 'Count':
-            d_stats_store[
-                holder.name] = getattr(
-                stores,
-                holder.type + 'Store')()
         stats = d_stats_store[holder.name]
         if stats.process(holder.val):
             self.stats[device][holder.name] = stats.as_dict()

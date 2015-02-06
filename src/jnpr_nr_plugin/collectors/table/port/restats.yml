@@ -8,23 +8,24 @@ REStats:
 REStatsView:
   fields:
     status: status
-    memory: memory-buffer-utilization
+    used: cpu-idle 
     cpu/user : cpu-user
-    cpu/idle: cpu-idle 
     cpu/background: cpu-background
     cpu/interrupt: cpu-interrupt
-    temperature : temperature/@celsius
-    cpu/load_average: load-average-five
     cpu/system: cpu-system
-
+    cpu/load_average: load-average-five
+    temperature : temperature/@celsius
+    memory: memory-buffer-utilization
+    
   meta_data:
     status: { type : count, unit : status }
-    memory: { type : gauge, unit : percent }
+    used: { type : gauge, unit : percent }
     cpu/user: { type : gauge, unit : percent }
-    cpu/idle: { type : gauge, unit : percent }
     cpu/system: { type : gauge, unit : percent }
     cpu/background: { type : gauge, unit : percent }
     cpu/interrupt: { type : gauge, unit : percent }
-    cpu/temperature: { type : gauge, unit : degree }
     cpu/load_average: { type : gauge, unit : load }
+    temperature: { type : gauge, unit : degree }
+    memory: { type : gauge, unit : percent }
+   
     

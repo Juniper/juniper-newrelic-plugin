@@ -41,7 +41,7 @@ PortStatsView:
     
   meta_data:
     state/admin: { type : count, unit : ports }
-    state/operation: { type : count, unit : ports }
+    state/operational: { type : count, unit : ports }
     bytes/rx: { type : rate, unit : bytes/sec, summarize : Yes }
     packets/rx: { type : rate, unit : pkts/sec, summarize : Yes }
     unicast/rx: { type : rate, unit : pkts/sec, summarize : Yes }

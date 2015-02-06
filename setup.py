@@ -28,7 +28,7 @@ setup(
     platforms={'linux'},
     packages=find_packages('src'),
     package_data={
-        'jnpr_nr_plugin.collectors.table.port.stats': ['*.yml']
+        'jnpr_nr_plugin.collectors.table.port': ['*.yml']
     },
     data_files=[(key, data_files[key]) for key in data_files.keys()],
     entry_points={

@@ -17,10 +17,13 @@ def decrypt_passwd(s):
 def get_host_name(ip):
     if not netaddr.valid_ipv4(ip):
         return ip
-    qualified_name = socket.gethostbyaddr(ip)[0]
-    if '.' in qualified_name:
-        return qualified_name.split('.')[0]
-    return qualified_name
+    try:
+        qualified_name = socket.gethostbyaddr(ip)[0]
+        if '.' in qualified_name:
+            return qualified_name.split('.')[0]
+        return qualified_name
+    except:
+        return ip
 
 def get_str(val):
     if val is None:
