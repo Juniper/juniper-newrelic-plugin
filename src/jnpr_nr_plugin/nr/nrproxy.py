@@ -15,7 +15,8 @@ LOGGER = logging.getLogger(__name__)
 class NRProxy(listeners.Listener):
     def __init__(self, config):
         self.config = config
-        self.URL = 'https://platform-api.newrelic.com/platform/v1/metrics'
+        self.ENDPOINT = self.config.get('endpoint', 'https://platform-api.newrelic.com')
+        self.URL = self.ENDPOINT + '/platform/v1/metrics'
         self.MAX_STATS_PER_POST = self.config.get('max_stats', 8000)
         self.NAME = self.config.get('name', 'net.juniper.jnpr_nr_plugin')
         self.UID = self.NAME + '.Juniper'
