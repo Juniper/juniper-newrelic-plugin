@@ -37,10 +37,14 @@ def get_device_list(device_cfg):
         if '-' in ip_address or ',' in ip_address:
             if '-' in ip_address:
                 ip_ranges = ip_address.split('-')
-                ip_list = list(
-                    iter_iprange(
-                        ip_ranges[0].strip(),
-                        ip_ranges[1].strip()))
+                if netaddr.valid_ipv4(ip_ranges[0]) and netaddr.valid_ipv4(ip_ranges[1]):
+                    ip_list = list(
+                        iter_iprange(
+                            ip_ranges[0].strip(),
+                            ip_ranges[1].strip()))
+                else:
+                    devices.append(device)
+                    continue
             else:
                 ip_list = ip_address.split(',')
             for ip in ip_list:
