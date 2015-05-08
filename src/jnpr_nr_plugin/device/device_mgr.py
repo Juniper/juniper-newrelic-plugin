@@ -69,42 +69,24 @@ class DeviceManager(object):
             pwd = utils.decrypt_passwd(device.get('password'))
         else:
             pwd = device.get('password')
-        dev = Device(host=dev_name, user=device.get('user'),
+        try:
+            dev = Device(host=dev_name, user=device.get('user'),
                      password=pwd, port=device.get('port', 22), gather_facts=False, auto_probe=5)
-        event = threading.Event()
-
-        def dev_open():
-            try:
-                dev.open()
-            except Exception as e:
-                LOGGER.error(
+            rpc_timeout = self.config.get('rpc_timeout', 1) * 60
+            dev.open()
+            if dev.connected:
+                dev.timeout = rpc_timeout
+                return dev
+        except Exception as e:
+            LOGGER.error(
                     'connect, for device [%s, %s] failed',
                     dev_name,
                     e)
-            finally:
-                LOGGER.debug(
+        finally:
+            LOGGER.debug(
                     'connect, for device %s %d(s)',
                     dev_name,
                     (time.time() - time1))
-                event.set()
-
-        thread = threading.Thread(
-            target=dev_open,
-            name='DevThread-' +
-                 dev_name)
-        thread.start()
-        time_out = self.config.get('connect_timeout', 1) * 60
-        rpc_timeout = self.config.get('rpc_timeout', 1) * 60
-        event.wait(time_out)
-        if not event.isSet():
-            LOGGER.critical(
-                'connect, not returned, close forcefully [%s] ',
-                dev_name)
-            self.close_connected_device('self', dev)
-            return None
-        if dev.connected:
-            dev.timeout = rpc_timeout
-            return dev
         return None
 
     @staticmethod

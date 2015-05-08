@@ -7,7 +7,7 @@ install_reqs = [
     'helper>=2.4.1',
     'requests>=2.4.1',
     'futures>=2.2.0',
-    'junos-eznc==1.0.0']
+    'junos-eznc>=1.1.2']
 base_path = '%s/jnpr_nr_plugin/etc' % os.getenv('VIRTUAL_ENV', '')
 data_files = dict()
 data_files[base_path] = ['LICENSE',
